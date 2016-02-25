@@ -15,7 +15,7 @@ Applications can be deployed using Broolkyn Web Console. Visit Brooklyn document
 
 ##Examples
 Here you can some applications examples TOSCA templates.
-* [Softcate](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/README.md)
+* [Softcate](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare.yaml)
 * [WebChat](...)(Soon)
 
 These examples specify a generic location (`<LOCATION>`) for each application module. `<LOCATION>`
