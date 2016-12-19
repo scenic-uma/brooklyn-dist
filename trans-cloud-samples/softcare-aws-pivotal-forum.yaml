@@ -147,33 +147,23 @@ topology_template:
         creationScriptUrl: "https://s3-eu-west-1.amazonaws.com/atos-paas/v3/forumdb.sql"
 
   groups:
-    add_Softcare_dashboard_locations:
-      members: [ Softcare_dashboard ]
+    add_Softcare_db_forum_locations:
+      members: [ SoftcareDB , ForumDB , MultimediaDB , Forum ]
+      policies:
+    - brooklyn.location:
+        jclouds:aws-ec2:
+          region: "eu-west-1"
+          identity: <user-key-id>
+          credential: <user-key>
+
+    add_Softcare_locations:
+      members: [ SoftcareWS , Softcare_dashboard , Multimedia ]
       policies:
       - brooklyn.location:
           cloudfoundry:
             user: <AKA_YOUR_USER_EMAIL>
             password <password>
             org: <organization>
-            endpoint: "https://api.run.pivotal.io"
+            endpoint: https://api.run.pivotal.io
             space: <space>
-            address: "run.pivotal.io"
-
-    add_Forum_locations:
-      members: [ Forum , ForumDB ]
-      policies:
-      - brooklyn.location:
-          jclouds:aws-ec2:
-            region: "us-west-2"
-            identity: <user-key-id>
-            credential: <user-key>
-
-
-    add_SoftcareWS_locations:
-      members: [ SoftcareWS, SoftcareDB ]
-      policies:
-      - brooklyn.location:
-          jclouds:softlayer:
-            region: "18171"
-            identity: <user-key-id>
-            credential: <private-key>
+            address: run.pivotal.io
