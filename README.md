@@ -22,7 +22,7 @@ You can build SNAPSHOT version and use the developer version. Building Trans-clo
 
 This project requires during building process some customized Brooklyn modules.
 
-First it is necessary build [kiuby88/brooklyn-server trans-cloud branch](https://github.com/kiuby88/brooklyn-server/tree/trans-cloud) using maven:
+First it is necessary build [scenic-uma/brooklyn-server trans-cloud branch](https://github.com/kiuby88/brooklyn-server/tree/trans-cloud) using maven:
 
     mvn clean install
 
