@@ -102,7 +102,7 @@
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <excludes combine.children="append">
-                        <exclude>scripts/README.md</exclude>
+                        <exclude>**/README.md</exclude>
                     </excludes>
                 </configuration>
             </plugin>
