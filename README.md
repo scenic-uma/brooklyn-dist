@@ -37,4 +37,4 @@ Once the dependencies are ready, [kiuby88/brooklyn-dist trans-cloud branch](http
 * The execution of tests can be avoided during the building process by using the [Surefiere plugin flag](http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-test.html) `-DskipTests`.
 
 ##Deploying Trans-cloud Applications
-Visit [examples](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/README.md) for guidelines on how trans-cloud applications can be modeled and deployed.
+Visit [examples](https://github.com/scenic-uma/brooklyn-dist/tree/trans-cloud/trans-cloud-samples/README.md) for guidelines on how trans-cloud applications can be modeled and deployed.
