@@ -22,7 +22,11 @@ You can build a SNAPSHOT version and use the developer version. Building trans-c
 
 This project requires some customized Brooklyn modules during the building process.
 
+<<<<<<< HEAD
 First, you have to build [kiuby88/brooklyn-server trans-cloud branch](https://github.com/kiuby88/brooklyn-server/tree/trans-cloud) using maven:
+=======
+First it is necessary build [scenic-uma/brooklyn-server trans-cloud branch](https://github.com/kiuby88/brooklyn-server/tree/trans-cloud) using maven:
+>>>>>>> trans-cloud
 
     mvn clean install
 
