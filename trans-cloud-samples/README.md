@@ -58,10 +58,13 @@ Amazon EC2 Oregon:
 
 Following, we can find some application which have preconfigued locations.
 
-* [Softcare on AWS Oregon, Softlayer Seattle  and Pivotal](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare_aws_softlayer_pivotal.yaml)
-* [Softcare on AWS Oregon, AWS Ireland and Pivotal](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare_aws_pivotal.yaml)
-* [Softcare on AWS and Bluemix](https://github.com/kiuby88/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare_aws_bluemix.yaml)
-* [WebChat on AWS and Pivotal](...) (Soon)
+* [Softcare on AWS](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare-aws.yaml)
+* [Softcare on AWS Ireland and Pivotal](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare-aws-pivotal.yaml)
+* [Softcare on AWS Ireland and Pivotal (forum)](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare-aws-pivotal-forum.yaml)
+* [Softcare on AWS Ireland and Softlayer London](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare-aws-softlayer-forum.yaml)
+
+softcare.yaml
+* [Generic Softcare](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/trans-cloud-samples/softcare.yaml)
 
 The locations can be pointed using a simple string, for example 'aws-ec2:us-west-2" for AWS Oregon,
 or `pivotal-instance` for Pivotal, but this requires [Brookly properties configuration](https://brooklyn.apache.org/v/latest/ops/locations/).

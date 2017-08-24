@@ -179,7 +179,7 @@ topology_template:
       - brooklyn.location:
           cloudfoundry:
             user: <AKA_YOUR_USER_EMAIL>
-            password <password>
+            password: <password>
             org: <organization>
             endpoint: https://api.run.pivotal.io
             space: <space>

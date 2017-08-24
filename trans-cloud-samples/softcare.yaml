@@ -179,6 +179,11 @@ topology_template:
       policies:
       - brooklyn.location: <LOCATION>
 
+    add_Multimedia_locations:
+      members: [ Multimedia ]
+      policies:
+      - brooklyn.location: <LOCATION>
+
     add_SoftcareDB_locations:
       members: [ SoftcareDB ]
       policies:
@@ -186,5 +191,10 @@ topology_template:
 
     add_ForumDB_locations:
       members: [ ForumDB ]
+      policies:
+      - brooklyn.location: <LOCATION>
+
+    add_MultimediaDB_locations:
+      members: [ MultimediaDB ]
       policies:
       - brooklyn.location: <LOCATION>
