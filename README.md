@@ -26,11 +26,11 @@ First it is necessary build [scenic-uma/brooklyn-server trans-cloud branch](http
 
     mvn clean install
 
-Then, [kiuby88/brooklyn-library trans-cloud branch](https://github.com/kiuby88/brooklyn-library/tree/trans-cloud) is required too. You can use the previous maven command again.
+Then, [scenic-uma/brooklyn-library trans-cloud branch](https://github.com/scenic-uma/brooklyn-library/tree/trans-cloud) is required too. You can use the previous maven command again.
 
     mvn clean install
 
-Once the dependencies are ready, [kiuby88/brooklyn-dist trans-cloud branch](https://github.com/kiuby88/brooklyn-dist/tree/trans-cloud) can be built using maven again:
+Once the dependencies are ready, [scenic-uma/brooklyn-dist trans-cloud branch](https://github.com/scenic-uma/brooklyn-dist/tree/trans-cloud) can be built using maven again:
 
     mvn clean install
 
