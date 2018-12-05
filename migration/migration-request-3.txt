@@ -1,0 +1,1 @@
+seaclouds-dashboard: aws-ec2:eu-west-1

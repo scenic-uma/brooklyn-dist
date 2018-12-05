@@ -1,0 +1,535 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0_wd03
+
+imports:
+  - tosca-normative-types:1.0.0.wd06-SNAPSHOT
+
+template_name: SeaClouds
+template_version: 0.1.0-SNAPSHOT
+template_author: josec
+
+description: SeaClouds topology
+
+relationship_types:
+  brooklyn.relationships.Configure:
+    derived_from: tosca.relationships.DependsOn
+    valid_targets: [ tosca.capabilities.Endpoint ]
+    properties:
+      prop.name:
+        type: string
+        required: false
+      prop.value:
+        type: string
+        required: true
+      prop.collection:
+        type: string
+        required: false
+
+node_types:
+  org.apache.brooklyn.entity.webapp.tomcat.TomcatServer:
+    derived_from: tosca.nodes.Root
+    description: >
+      A simple Tomcat server
+    properties:
+      version:
+        type: string
+        required: false
+        default: 7.0.65
+      http.port:
+        type: list
+        required: false
+        entry_schema:
+          type: string
+      java.sysprops:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+      wars.root:
+        type: string
+        required: false
+    capabilities:
+      endpoint_configuration: tosca.capabilities.Endpoint
+    requirements:
+      - dbConnection: tosca.nodes.Root
+        type: brooklyn.relationships.Configure
+        lower_bound: 0
+        upper_bound: unbounded
+      - endpoint_configuration: tosca.nodes.Root
+        type: brooklyn.relationships.Configure
+        lower_bound: 0
+        upper_bound: unbounded
+
+  org.apache.brooklyn.entity.database.mysql.MySqlNode:
+    derived_from: tosca.nodes.Root
+    description: >
+      A node to install MySQL v5.5 database with data
+      on a specific attached volume.
+    properties:
+      port:
+        type: integer
+        default: 3306
+        required: false
+        description: The port on which the underlying database service will listen to data.
+      version:
+        type: string
+        default: 5.6.26
+        required: false
+      creationScriptUrl:
+        type: string
+        required: true
+    capabilities:
+      dbConnection: tosca.capabilities.Endpoint.Database
+
+  org.apache.brooklyn.entity.nosql.mongodb.MongoDBServer:
+    derived_from: tosca.nodes.Root
+    properties:
+      shell.env:
+        type: map
+        required: false
+        entry_schema:
+          type: string  
+    capabilities:
+      dbConnection: tosca.capabilities.Endpoint.Database    
+
+  org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess:
+    derived_from: tosca.nodes.Root
+    properties:
+      version:
+        type: string
+        required: false
+      http.port:
+        type: integer
+        required: false
+        description: The port on which the underlying database service will listen to data.
+      runtimeFiles:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+      shell.env:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+      os_distribution: 
+        type: string
+        required: false
+        description: The port on which the underlying database service will listen to data.
+      num_cpus:
+        type: integer
+        description: Number of (actual or virtual) CPUs associated with the Compute node.
+        required: false
+        constraints:
+          - greater_or_equal: 1
+      cpu_frequency:
+        type: scalar-unit.frequency
+        description: >
+          Specifies the operating frequency of CPU's core.  This property expresses the expected frequency of one (1) CPU as provided by the property
+          “num_cpus”.
+        required: false
+        constraints:
+          - greater_or_equal: 0.1 GHz
+      disk_size:
+        type: scalar-unit.size
+        description: Size of the local disk available to applications running on the Compute node (default unit is MB).
+        required: false
+        constraints:
+          - greater_or_equal: 0 MB
+      mem_size:
+        type: scalar-unit.size
+        description: Size of memory available to applications running on the Compute node (default unit is MB).
+        required: false
+        constraints:
+          - greater_or_equal: 0 MB
+      required.ports: 
+        type: list
+        required: false
+        description: The list of required ports.
+        entry_schema:
+          type: string
+      post.launch.command:
+        type: string
+        required: false
+      installLatch:
+        type: string
+        required: false
+      launchLatch:
+        type: string
+        required: false
+      download.url:
+        type: string
+        required: false
+    capabilities:
+      endpoint_configuration: tosca.capabilities.Endpoint
+      dbConnection: tosca.capabilities.Endpoint.Database 
+    requirements:
+      - dbConnection: tosca.nodes.Root
+        type: brooklyn.relationships.Configure
+        lower_bound: 0
+        upper_bound: unbounded
+      - endpoint_configuration: tosca.nodes.Root
+        type: brooklyn.relationships.Configure
+        lower_bound: 0
+        upper_bound: unbounded
+
+
+  org.apache.brooklyn.entity.brooklynnode.BrooklynNode:
+    derived_from: tosca.nodes.Root
+    properties:
+      version:
+        type: string
+        required: false
+      onExistingProperties: 
+        type: string
+        required: false
+      brooklynnode.webconsole.nosecurity:
+        type: boolean
+        required: false
+      brooklynnode.classpath: 
+        type: string
+        required: false
+      bindAddress:
+        type: string
+        required: false
+      brooklynnode.webconsole.httpPort:
+        type: string
+        required: false
+      brooklynnode.managementPassword:
+        type: string
+        required: false
+      brooklynnode.managementUser:
+        type: string
+        required: false
+      required.ports: 
+        type: list
+        required: false
+        description: The list of required ports.
+        entry_schema:
+          type: string
+    capabilities:
+      endpoint_configuration: tosca.capabilities.Endpoint
+
+topology_template:
+  node_templates:
+    seaclouds-data-collector:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        http.port: 8176
+        runtimeFiles:
+          https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=eu.seaclouds-project.monitor&a=seaclouds-data-collector&v=LATEST&e=jar : seaclouds-dc.jar
+        shell.env:
+          SEACLOUDS_DC_PORT: $brooklyn:config("http.port")
+          MANAGER_PORT: 8170
+          DC_SYNC_PERIOD: "10"
+          RESOURCES_KEEP_ALIVE_PERIOD: "25"
+        os_distribution: ubuntu
+        launchLatch: $brooklyn:component("seaclouds-monitor-manager").attributeWhenReady("service.isUp")
+      interfaces:
+        Standard:
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-dc/start.sh
+           post_start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-dc/post-start.sh
+           started: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-dc/started.sh
+           stop: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-dc/stop.sh
+      requirements:
+        - endpoint_configuration:
+            node: seaclouds-monitor-manager
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: MANAGER_IP
+              prop.value: $brooklyn:component("seaclouds-monitor-manager").attributeWhenReady("host.address")
+
+    seaclouds-discoverer:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        runtimeFiles:
+          https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=eu.seaclouds-project&a=discoverer&v=LATEST&e=jar : discoverer.jar
+        http.port: 2000
+        shell.env:
+          DISCOVERER_PORT: $brooklyn:config("http.port")
+          DISCOVERER_DB_PORT: 28017
+        os_distribution: ubuntu
+        launchLatch: $brooklyn:component("seaclouds-discoverer-db").attributeWhenReady("service.isUp")
+      interfaces:
+        Standard:
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-discoverer/start.sh
+      requirements:
+        - dbConnection:
+            node: seaclouds-discoverer-db
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: DISCOVERER_DB_HOST
+              prop.value: $brooklyn:component("seaclouds-discoverer-db").attributeWhenReady("host.address")
+
+    seaclouds-discoverer-db:
+      type: org.apache.brooklyn.entity.nosql.mongodb.MongoDBServer
+      properties:  
+        shell.env:
+          EXPANDEDINSTALL_DIR: $brooklyn:attributeWhenReady("expandedinstall.dir")
+          DB: DrACO_DB
+          COLLECTION: offerings
+          FILE: https://raw.githubusercontent.com/SeaCloudsEU/SeaCloudsPlatform/master/discoverer/src/main/resources/offerings.json
+      interfaces:
+        Standard:           
+           post_start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-discoverer-db/post-start.sh
+
+    seaclouds-grafana:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        http.port: 3000
+        shell.env:
+          GRAFANA_PORT: $brooklyn:config("http.port")
+          GRAFANA_USER: admin
+          GRAFANA_PASSWORD: seaclouds
+          INFLUXDB_DB_NAME: tower4clouds
+          INFLUXDB_DB_USER: "root"
+          INFLUXDB_DB_PASSWORD: root
+        installLatch: $brooklyn:component("seaclouds-influxdb").attributeWhenReady("service.isUp")
+        osFamily: ubuntu
+      interfaces:
+        Standard:
+           create: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-grafana/create.sh
+           configure: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-grafana/configure.sh
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-grafana/start.sh
+           stop: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-grafana/stop.sh
+      requirements:
+        - dbConnection:
+            node: seaclouds-influxdb
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: INFLUX_DB_URL
+              prop.value: $brooklyn:formatString("http://%s:%s", component("seaclouds-influxdb").attributeWhenReady("host.address"), component("seaclouds-influxdb").config("http.port"))
+
+    seaclouds-influxdb:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        http.port: 8086  
+        shell.env:
+          INFLUXDB_DB_NAME: tower4clouds
+          INFLUXDB_DB_USER: "root"
+          INFLUXDB_DB_PASSWORD: root
+        os_distribution: ubuntu
+      interfaces:
+        Standard:
+           create: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-influxdb/create.sh
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-influxdb/start.sh
+           post_start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-influxdb/post-start.sh
+           started: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-influxdb/started.sh
+           stop: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-influxdb/stop.sh
+
+    seaclouds-monitor-manager:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        version: 0.2
+        download.url: https://github.com/deib-polimi/tower4clouds/releases/download/v${version}/manager-server-${version}.tar.gz
+        shell.env:
+          MONITOR_MANAGER_VERSION: 0.2
+          MONITOR_MANAGER_PORT: 8170
+          MONITOR_DDA_PORT: 8175
+        os_distribution: ubuntu
+      interfaces:
+        Standard:
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-monitor-manager/start.sh
+      requirements:
+        - dbConnection:
+            node: seaclouds-monitor-dda
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: MONITOR_DDA_HOST
+              prop.value: $brooklyn:component("seaclouds-monitor-dda").attributeWhenReady("host.address")
+
+    seaclouds-monitor-dda:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        version: 0.2
+        download.url: https://github.com/deib-polimi/tower4clouds/releases/download/v${version}/data-analyzer-${version}.tar.gz
+        shell.env:
+          MONITOR_DDA_VERSION: 0.2
+          MONITOR_MANAGER_PORT: 8175
+        os_distribution: ubuntu
+      interfaces:
+        Standard:
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-monitor-dda/start.sh
+
+    seaclouds-sla-service:
+      type: org.apache.brooklyn.entity.webapp.tomcat.TomcatServer
+      properties:
+        wars.root: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/sla/sla-service.war
+        java.sysprops:
+          DB_USERNAME: "atossla"
+          DB_PASSWORD: "_atossla_"
+      requirements:
+        - dbConnection:
+            node: seaclouds-sla-db
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: DB_URL
+              prop.value: $brooklyn:formatString("jdbc:%s%s", component("seaclouds-sla-db").attributeWhenReady("datastore.url"),"sc_sla")
+        - endpoint_configuration:
+            node: seaclouds-monitor-manager
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: MONITOR_METRICS_URL
+              prop.value: $brooklyn:formatString("http://%s:%s/v1/metrics", component("seaclouds-monitor-manager").attributeWhenReady("host.address"), "8170")
+
+    seaclouds-sla-db:  
+      type: org.apache.brooklyn.entity.database.mysql.MySqlNode
+      properties:
+        creationScriptUrl: https://raw.githubusercontent.com/SeaCloudsEU/SeaCloudsPlatform/60ae47c3cdf50412cf5541c4f089e59433823a53/sla/sla-core/sla-repository/src/main/resources/sql/01database.sql
+
+    seaclouds-deployer:
+      type: org.apache.brooklyn.entity.brooklynnode.BrooklynNode
+      properties:
+        onExistingProperties: do_not_use
+        brooklynnode.webconsole.nosecurity: true
+        brooklynnode.managementPassword: seaclouds
+        brooklynnode.managementUser: seaclouds
+
+    seaclouds-planner:
+      type: org.apache.brooklyn.entity.webapp.tomcat.TomcatServer
+      properties:
+        wars.root: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-planner/planner.war
+        http.port: 1234
+      requirements:
+        - endpoint_configuration:
+            node: seaclouds-discoverer
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: discovererURL
+              prop.value: $brooklyn:formatString("http://%s:%s/", $brooklyn:component("seaclouds-discoverer").attributeWhenReady("host.address"), $brooklyn:component("seaclouds-discoverer").config("http.port"))
+        - endpoint_configuration:
+            node: seaclouds-sla-service
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: slaGeneratorURL
+              prop.value: $brooklyn:formatString("http://%s:%s", $brooklyn:component("seaclouds-sla-service").attributeWhenReady("host.address"), $brooklyn:component("seaclouds-sla-service").attributeWhenReady("http.port"))
+        - endpoint_configuration:
+            node: seaclouds-grafana
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: grafanaEndpoint
+              prop.value: $brooklyn:component("seaclouds-grafana").attributeWhenReady("host.address")
+        - endpoint_configuration:
+            node: seaclouds-influxdb
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: influxdbURL
+              prop.value: $brooklyn:component("seaclouds-influxdb").attributeWhenReady("host.address")
+        - endpoint_configuration:
+            node: seaclouds-monitor-manager
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: java.sysprops
+              prop.name: monitorGeneratorURL
+              prop.value: $brooklyn:component("seaclouds-monitor-manager").attributeWhenReady("host.address")
+
+    seaclouds-dashboard:
+      type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+      properties:
+        runtimeFiles:
+          https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=eu.seaclouds-project&a=dashboard&v=LATEST&e=jar : dashboard.jar
+        http.port: 8000
+        shell.env:
+          DASHBOARD_PORT: $brooklyn:config("http.port")
+          DEPLOYER_PORT: $brooklyn:component("seaclouds-deployer").attributeWhenReady("brooklynnode.webconsole.httpPort")
+          SLA_PORT: $brooklyn:component("seaclouds-sla-service").attributeWhenReady("http.port")
+          GRAFANA_PORT: $brooklyn:component("seaclouds-grafana").config("http.port")
+          PLANNER_PORT: $brooklyn:component("seaclouds-planner").config("http.port")        
+        os_distribution: ubuntu
+      interfaces:
+        Standard:
+           start: https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/seaclouds-dashboard/start.sh
+      requirements:
+        - endpoint_configuration:
+            node: seaclouds-planner
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: PLANNER_HOST
+              prop.value: $brooklyn:component("seaclouds-planner").attributeWhenReady("host.address")
+        - endpoint_configuration:
+            node: seaclouds-sla-service
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: SLA_HOST
+              prop.value: $brooklyn:component("seaclouds-sla-service").attributeWhenReady("host.address")
+        - endpoint_configuration:
+            node: seaclouds-grafana
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: GRAFANA_HOST
+              prop.value: $brooklyn:component("seaclouds-grafana").attributeWhenReady("host.address")
+        - endpoint_configuration:
+            node: seaclouds-deployer
+            relationship: brooklyn.relationships.Configure
+            properties:
+              prop.collection: shell.env
+              prop.name: DEPLOYER_HOST
+              prop.value: $brooklyn:component("seaclouds-deployer").attributeWhenReady("host.address")
+
+  groups:
+    location-seaclouds-data-collector:
+      members: [seaclouds-data-collector]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-discoverer:
+      members: [seaclouds-discoverer]
+      policies:
+        - brooklyn.location: aws-ec2:us-west-2
+    location-seaclouds-discoverer-db:
+      members: [seaclouds-discoverer-db]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-grafana:
+      members: [seaclouds-grafana]
+      policies:
+        - brooklyn.location: softlayer:lon02
+    location-seaclouds-influxdb:
+      members: [seaclouds-influxdb]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-monitor-manager:
+      members: [seaclouds-monitor-manager]
+      policies:
+        - brooklyn.location: aws-ec2:us-west-2
+    location-seaclouds-monitor-app:
+      members: [seaclouds-monitor-dda]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-sla-service:
+      members: [seaclouds-sla-service]
+      policies:
+        - brooklyn.location: softlayer:lon02
+    location-seaclouds-sla-db:
+      members: [seaclouds-sla-db]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-deployer:
+      members: [seaclouds-deployer]
+      policies:
+        - brooklyn.location: aws-ec2:us-west-2
+    location-seaclouds-planner:
+      members: [seaclouds-planner]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+    location-seaclouds-dashboard:
+      members: [seaclouds-dashboard]
+      policies:
+        - brooklyn.location: aws-ec2:eu-west-1
+
+    migration-policy:
+      members:
+      policies:
+      - migration:
+          type: org.apache.brooklyn.entity.webapp.ApplicationMigrationTdPolicy

@@ -1,0 +1,2 @@
+seaclouds-data-collector: aws-ec2:eu-west-1,
+seaclouds-planner: pivotal-ws2

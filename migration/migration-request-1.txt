@@ -1,0 +1,6 @@
+seaclouds-discoverer: aws-ec2:eu-west-1,
+seaclouds-grafana: aws-ec2:eu-west-1,
+seaclouds-monitor-manager: aws-ec2:eu-west-1,
+seaclouds-sla-service: pivotal-ws2,
+seaclouds-deployer: aws-ec2:eu-west-1
+
