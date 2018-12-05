@@ -43,9 +43,24 @@ Visit [examples](https://github.com/scenic-uma/brooklyn-dist/tree/trans-cloud/tr
 Trans-cloud approach allows to runtime migration of componets. Once an application is running, migration effectors can be used to move one or more components of an application to new locations.
 
 ### SeaClouds, the migration use case
-Here you can find the SeaClouds topology to deploy the application on desired providers. Please, note topology contains a policy to enable the component migration mechanisms (see [effectors](https://brooklyn.apache.org/v/latest/blueprints/effectors.html)).
+Here you can find the SeaClouds [topology](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/seaclouds-topology.yaml) to deploy the application on desired providers. Please, note topology contains a policy to enable the component migration mechanisms (see [effectors](https://brooklyn.apache.org/v/latest/blueprints/effectors.html)).
 
 If SeaClouds is deployed and once application is running, you can request a the migration of some components by means an migration plan, such the following:
+
+The migration request for [first scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-1.txt)
+- **Discoverer**: AWS EC2 Oregon => AWS EC2 Ireland  
+- **Monitor Dashboard**: AWS EC2 Oregon => AWS EC2 Ireland
+- **Deployer**: AWS EC2 Oregon => AWS EC2 Ireland
+- **Monitor Dashboard**: Softlayer London => AWS EC2 Ireland
+- **SLA Service**: AWS EC2 Oregon => Pivotal WS
+
+The migration request for [second scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-2.txt)
+- **DataCollector**: Softlayer London => AWS EC2 Ireland
+- **Planner**: BlueMix => Pivotal WS
+
+The migration request for [third scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-3.txt)
+- **Dashboard**: Softlayer London => AWS EC2 Ireland
+
 
 
 
