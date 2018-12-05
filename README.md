@@ -17,7 +17,7 @@ You can get the latest release of trans-cloud Brooklyn [here](https://github.com
 - Runtime migration of components
 
 ### Configuration
-In order to facilitaty the configuration to follow the proposed examples for application deployments and migrations, we propose to use the following brooklyn.property template. This includes the security and locations naming according to used topologies.
+In order to facilitaty the configuration to follow the proposed examples for application deployments and migrations, we propose to use the following [brooklyn.property template](https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/brooklyn-template.properties). This includes the security and locations naming according to used topologies.
 
 The rest of the installation and configuration process is as for the official distribution of Brooklyn. You can therefore follow the [official documentation](https://brooklyn.apache.org/v/latest/start/running.html) for installation and execution instructions. 
 
