@@ -11,7 +11,7 @@ This repository contains an extension of Brooklyn's API with facilities for the 
 
 ## Running
 
-You can get the latest release of trans-cloud Brooklyn [here](https://github.com/kiuby88/brooklyn-dist/releases/download/apache-brooklyn-0.9.0-transcloud/brooklyn-trans-cloud-v0.1.0.zip). This version includes:
+You can get the latest release of trans-cloud Brooklyn 0.2.0 [here](https://github.com/scenic-uma/brooklyn-dist/releases/tag/0.2.0). This version includes:
 - Last brooklyn-TOSCA plug-in
 - Trans-cloud application deployment
 - Runtime migration of components
