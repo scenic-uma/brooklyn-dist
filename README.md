@@ -9,11 +9,18 @@ This repository contains the trans-cloud Application components migrations based
 
 This repository contains an extension of Brooklyn's API with facilities for the migration of PaaS services of platforms based on [Cloud Foundry](https://www.cloudfoundry.org/), providing a homogeneous access to IaaS and PaaS services. The implementation is based on the [Brooklyn-TOSCA plugin](https://github.com/cloudsoft/brooklyn-tosca/), and has beed tested using [Pivotal Web Services](https://run.pivotal.io/) and [Bluemix](https://console.ng.bluemix.net/).
 
-<!--  ##Running
+## Running
 
- You can get the latest release of trans-cloud Brooklyn [here](https://github.com/kiuby88/brooklyn-dist/releases/download/apache-brooklyn-0.9.0-transcloud/brooklyn-trans-cloud-v0.1.0.zip).
- The installation and configuration process is as for the official distribution of Brooklyn. You can therefore follow the [official documentation](https://brooklyn.apache.org/v/latest/start/running.html) for installation and execution instructions.
--->
+You can get the latest release of trans-cloud Brooklyn [here](https://github.com/kiuby88/brooklyn-dist/releases/download/apache-brooklyn-0.9.0-transcloud/brooklyn-trans-cloud-v0.1.0.zip). This version includes:
+- Last brooklyn-TOSCA plug-in
+- Trans-cloud application deployment
+- Runtime migration of components
+
+### Configuration
+In order to facilitaty the configuration to follow the proposed examples for application deployments and migrations, we propose to use the following brooklyn.property template. This includes the security and locations naming according to used topologies.
+
+The rest of the installation and configuration process is as for the official distribution of Brooklyn. You can therefore follow the [official documentation](https://brooklyn.apache.org/v/latest/start/running.html) for installation and execution instructions. 
+
 ### Building Notes
 You can build a SNAPSHOT version and use the developer version. Building trans-cloud Brooklyn shouldn't be a big deal, the only prerequisites are:
 - Git
