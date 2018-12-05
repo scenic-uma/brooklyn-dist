@@ -42,7 +42,7 @@ Visit [examples](https://github.com/scenic-uma/brooklyn-dist/tree/trans-cloud/tr
 # Runtime Migration
 Trans-cloud approach allows to runtime migration of componets. Once an application is running, migration effectors can be used to move one or more components of an application to new locations.
 
-### Migration use case. SeaClouds
+### SeaClouds, the migration use case
 Here you can find the SeaClouds topology to deploy the application on desired providers. Please, note topology contains a policy to enable the component migration mechanisms (see [effectors](https://brooklyn.apache.org/v/latest/blueprints/effectors.html)).
 
 If SeaClouds is deployed and once application is running, you can request a the migration of some components by means an migration plan, such the following:
