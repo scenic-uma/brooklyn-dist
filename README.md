@@ -9,11 +9,18 @@ This repository contains the trans-cloud Application components migrations based
 
 This repository contains an extension of Brooklyn's API with facilities for the migration of PaaS services of platforms based on [Cloud Foundry](https://www.cloudfoundry.org/), providing a homogeneous access to IaaS and PaaS services. The implementation is based on the [Brooklyn-TOSCA plugin](https://github.com/cloudsoft/brooklyn-tosca/), and has beed tested using [Pivotal Web Services](https://run.pivotal.io/) and [Bluemix](https://console.ng.bluemix.net/).
 
-<!--  ##Running
+## Running
 
- You can get the latest release of trans-cloud Brooklyn [here](https://github.com/kiuby88/brooklyn-dist/releases/download/apache-brooklyn-0.9.0-transcloud/brooklyn-trans-cloud-v0.1.0.zip).
- The installation and configuration process is as for the official distribution of Brooklyn. You can therefore follow the [official documentation](https://brooklyn.apache.org/v/latest/start/running.html) for installation and execution instructions.
--->
+You can get the latest release of trans-cloud Brooklyn 0.2.0 [here](https://github.com/scenic-uma/brooklyn-dist/releases/tag/0.2.0). This version includes:
+- Last brooklyn-TOSCA plug-in
+- Trans-cloud application deployment
+- Runtime migration of components
+
+### Configuration
+In order to facilitaty the configuration to follow the proposed examples for application deployments and migrations, we propose to use the following [brooklyn.property template](https://s3-eu-west-1.amazonaws.com/seaclouds-tosca/brooklyn-template.properties). This includes the security and locations naming according to used topologies.
+
+The rest of the installation and configuration process is as for the official distribution of Brooklyn. You can therefore follow the [official documentation](https://brooklyn.apache.org/v/latest/start/running.html) for installation and execution instructions. 
+
 ### Building Notes
 You can build a SNAPSHOT version and use the developer version. Building trans-cloud Brooklyn shouldn't be a big deal, the only prerequisites are:
 - Git
@@ -43,9 +50,24 @@ Visit [examples](https://github.com/scenic-uma/brooklyn-dist/tree/trans-cloud/tr
 Trans-cloud approach allows to runtime migration of componets. Once an application is running, migration effectors can be used to move one or more components of an application to new locations.
 
 ### SeaClouds, the migration use case
-Here you can find the SeaClouds topology to deploy the application on desired providers. Please, note topology contains a policy to enable the component migration mechanisms (see [effectors](https://brooklyn.apache.org/v/latest/blueprints/effectors.html)).
+Here you can find the SeaClouds [topology](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/seaclouds-topology.yaml) to deploy the application on desired providers. Please, note topology contains a policy to enable the component migration mechanisms (see [effectors](https://brooklyn.apache.org/v/latest/blueprints/effectors.html)).
 
 If SeaClouds is deployed and once application is running, you can request a the migration of some components by means an migration plan, such the following:
+
+The migration request for [first scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-1.txt)
+- **Discoverer**: AWS EC2 Oregon => AWS EC2 Ireland  
+- **Monitor Dashboard**: AWS EC2 Oregon => AWS EC2 Ireland
+- **Deployer**: AWS EC2 Oregon => AWS EC2 Ireland
+- **Monitor Dashboard**: Softlayer London => AWS EC2 Ireland
+- **SLA Service**: AWS EC2 Oregon => Pivotal WS
+
+The migration request for [second scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-2.txt)
+- **DataCollector**: Softlayer London => AWS EC2 Ireland
+- **Planner**: BlueMix => Pivotal WS
+
+The migration request for [third scenario](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/migration-request-3.txt)
+- **Dashboard**: Softlayer London => AWS EC2 Ireland
+
 
 
 
