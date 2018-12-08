@@ -69,5 +69,13 @@ The migration request for [third scenario](https://github.com/scenic-uma/brookly
 - **Dashboard**: Softlayer London => AWS EC2 Ireland
 
 
+#### Migration Results
+Each previos scenario was applied 100 times to evaluate the performance of the migration, and another 100 times using Reference Algorithm, following you can find the reports with the collected data for each experiment.
+
+**Scenario 1**: [migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/scenario1-report.csv) and [reference-migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/%5BREF%5Dscenario1-report.csv)
+
+**Scenario 2**: [migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/scenario2-report.csv) and [reference-migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/%5BREF%5Dscenario2-report.csv)
+
+**Scenario 3**: [migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/scenario3-report.csv) and [reference-migration.csv](https://github.com/scenic-uma/brooklyn-dist/blob/trans-cloud/migration/results/%5BREF%5Dscenario3-report.csv)
 
 
